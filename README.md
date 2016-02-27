@@ -1,6 +1,6 @@
 # W3C HTML Validation for PostHTML
 
-Checks if HTML is valid to W3C standards using the [W3C Validator Service](https://validator.w3.org/)
+Checks if HTML is valid to W3C standards using the [W3C Validation Service](https://validator.w3.org/)
 
 ## Install
 
