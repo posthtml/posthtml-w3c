@@ -1,0 +1,23 @@
+{
+  "name": "posthtml-w3c",
+  "version": "0.2.0",
+  "description": "W3C Validation for PostHTML",
+  "engines": {
+    "node": ">=4"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "posthtml-render": "^1.0.5",
+    "w3cjs": "^0.3.0"
+  },
+  "devDependencies": {},
+  "author": {
+    "name": "Michael Ciniawky",
+    "email": "michael.ciniawsky@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http:/github.com/michael-ciniawsky/posthtml-w3c"
+  },
+  "license": "MIT"
+}
