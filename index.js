@@ -4,44 +4,49 @@
 
 'use strict'
 
-var pretty = require('chalk')
-var render = require('posthtml-render')
-var w3c = require('w3cjs')
+let chalk = require('chalk')
+let tab = require('text-table')
+let log = require('log-symbols')
 
-var error = require('./lib/error')
-var line = require('./lib/line')
+let render = require('posthtml-render')
+let w3c = require('w3cjs')
 
-exports = module.exports = function(options) {
-    options = options || {}
+let title = require('./lib/title')
+let type = require('./lib/type')
+let line = require('./lib/line')
+let message = require('./lib/msg')
 
-    return function postHTMLValidate (tree) {
+exports = module.exports = function (options) {
+  options = options || {}
 
-        let result = w3c.validate({
-            input: render(tree),
-            output: 'json',
+  return function PostHTMLValidate (tree) {
+    w3c.validate({
+      input: render(tree),
+      output: 'json',
+      callback: function (res) {
+        title('\nW3C Validation')
 
-            callback: function (res) {
-              console.log(pretty.blue.bold('W3C Validation Results'))
-              let err = 0
+        let table = tab(res.messages.map(msg => {
+          let row = [
+            '\n',
+            '[' + type(msg.type) + ' ',
+            line(msg.lastLine, msg.firstColumn) + ']',
+            '\n' + message(msg.message)
+          ]
 
-                res.messages.forEach(msg => {
+          return row
+        }), {align: 'l', hsep: ''})
 
-                  for (let i = 0; i < res.messages.length; i++) {
+        console.log(table)
+        
+        let result = res.messages.length
 
-                    console.log(pretty.red.bold(`\n=> Error ${i}\n`))
-                    error(msg.type)
-                    line(msg.lastLine, msg.firstColumn, msg.lastColumn)
-
-                    console.log(pretty.magenta(msg.message))
-                    err = i
-                  }
-                })
-                if (err === 0) {
-                  console.log(pretty.green(`\n=> Finished with ${err} Errors`))
-                }
-                console.log(pretty.red.bold(`\n=> Finished founding ${err} Errors`))
-            }
-        })
-        return tree
-    }
+        if (result === 0) {
+          console.log(chalk.green(`\n${log.succes}  ${result} Errors`))
+        }
+        console.log(chalk.red(`\n${log.warning}  ${result} Errors`))
+      }
+    })
+    return tree
+  }
 }
