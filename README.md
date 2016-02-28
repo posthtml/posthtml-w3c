@@ -26,3 +26,25 @@ posthtml([ validate ])
   .process(html)
   .then(result => console.log(result.html))
 ```
+#### Output
+```bash
+PostHTML W3C Validation
+-----------------------
+
+⚠ info [14:5]
+Consider using the “h1” element as a top-level heading only
+(all “h1” elements are treated as top-level headings by many
+screen readers and other tools).
+
+⚠ info [19:5]
+Consider using the “h1” element as a top-level heading only
+(all “h1” elements are treated as top-level headings by many
+screen readers and other tools).
+
+⚠ info [18:5]
+Consider using the “h1” element as a top-level heading only
+(all “h1” elements are treated as top-level headings by many
+screen readers and other tools).
+
+⚠  3 Errors
+```

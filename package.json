@@ -1,6 +1,6 @@
 {
   "name": "posthtml-w3c",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "W3C Validation for PostHTML",
   "engines": {
     "node": ">=4"
