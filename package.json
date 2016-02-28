@@ -1,6 +1,6 @@
 {
   "name": "posthtml-w3c",
-  "version": "0.3.0",
+  "version": "0.8.0",
   "description": "W3C Validation for PostHTML",
   "engines": {
     "node": ">=4"
@@ -13,13 +13,24 @@
     "w3cjs": "^0.3.0"
   },
   "devDependencies": {},
+  "keywords": [
+    "HTML",
+    "PostHTML",
+    "PostHTML Plugin",
+    "W3C",
+    "W3C Validation"
+  ],
   "author": {
     "name": "Michael Ciniawky",
     "email": "michael.ciniawsky@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "http:/github.com/michael-ciniawsky/posthtml-w3c"
+    "url": "https:/github.com/michael-ciniawsky/posthtml-w3c"
   },
+  "bugs": {
+    "url": "https://github.com/michael-ciniawsky/posthtml-w3c/issues"
+  },
+  "homepage": "https://github.com/michael-ciniawsky/posthtml-w3c#readme",
   "license": "MIT"
 }

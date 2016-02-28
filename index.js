@@ -19,26 +19,27 @@ let message = require('./lib/msg')
 exports = module.exports = function (options) {
   options = options || {}
 
-  return function PostHTMLValidate (tree) {
+  return function postHTMLValidate (tree) {
     w3c.validate({
       input: render(tree),
       output: 'json',
       callback: function (res) {
-        title('\nW3C Validation')
+        res.messages.shift()
+        res.messages.shift()
+
+        title('\nPostHTML W3C Validation')
 
         let table = tab(res.messages.map(msg => {
           let row = [
-            '\n',
-            '[' + type(msg.type) + ' ',
-            line(msg.lastLine, msg.firstColumn) + ']',
-            '\n' + message(msg.message)
+            `\n${type(msg.type) + ' ' + line(msg.lastLine, msg.firstColumn)}`,
+            `\n${message(msg.message)}`
           ]
 
           return row
         }), {align: 'l', hsep: ''})
 
         console.log(table)
-        
+
         let result = res.messages.length
 
         if (result === 0) {
