@@ -23,7 +23,7 @@ exports = module.exports = function (options) {
     w3c.validate({
       input: render(tree),
       output: 'json',
-      callback: function (res) {
+      callback: function (err, res) {
         res.messages.shift()
         res.messages.shift()
 
