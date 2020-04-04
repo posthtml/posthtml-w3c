@@ -19,35 +19,41 @@ let message = require('./lib/msg')
 exports = module.exports = function (options) {
   options = options || {}
 
-  return function postHTMLValidate (tree) {
-    w3c.validate({
-      input: render(tree),
-      output: 'json',
-      callback: function (err, res) {
-        res.messages.shift()
-        res.messages.shift()
+  return async function postHTMLValidate (tree) {
 
-        title('\nPostHTML W3C Validation')
+    return new Promise(resolve => {
 
-        let table = tab(res.messages.map(msg => {
-          let row = [
-            `\n${type(msg.type) + ' ' + line(msg.lastLine, msg.firstColumn)}`,
-            `\n${message(msg.message)}`
-          ]
+      w3c.validate({
+        input: render(tree),
+        output: 'json',
+        callback: function (err, res) {
+          res.messages.shift()
+          res.messages.shift()
 
-          return row
-        }), {align: 'l', hsep: ''})
+          title('\nPostHTML W3C Validation')
 
-        console.log(table)
+          let table = tab(res.messages.map(msg => {
+            let row = [
+              `\n${type(msg.type) + ' ' + line(msg.lastLine, msg.firstColumn)}`,
+              `\n${message(msg.message)}`
+            ]
 
-        let result = res.messages.length
+            return row
+          }), {align: 'l', hsep: ''})
 
-        if (result === 0) {
-          console.log(chalk.green(`\n${log.succes}  ${result} Errors`))
+          console.log(table)
+
+          let result = res.messages.length
+
+          if (result === 0) {
+            console.log(chalk.green(`\n${log.succes}  ${result} Errors`))
+          }
+          console.log(chalk.red(`\n${log.warning}  ${result} Errors`))
+
+          resolve(tree);
         }
-        console.log(chalk.red(`\n${log.warning}  ${result} Errors`))
-      }
+      })
+
     })
-    return tree
   }
 }
