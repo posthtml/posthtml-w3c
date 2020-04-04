@@ -18,6 +18,7 @@ let message = require('./lib/msg')
 
 exports = module.exports = function (options) {
   options = options || {}
+  options.filter = options.filter || [];
 
   return async function postHTMLValidate (tree) {
 
@@ -30,9 +31,10 @@ exports = module.exports = function (options) {
           res.messages.shift()
           res.messages.shift()
 
-          title('\nPostHTML W3C Validation')
+          const filtered = res.messages
+            .filter(msg => !options.filter.some(s => msg.message.includes(s)))
 
-          let table = tab(res.messages.map(msg => {
+          let table = tab(filtered.map(msg => {
             let row = [
               `\n${type(msg.type) + ' ' + line(msg.lastLine, msg.firstColumn)}`,
               `\n${message(msg.message)}`
@@ -41,14 +43,21 @@ exports = module.exports = function (options) {
             return row
           }), {align: 'l', hsep: ''})
 
-          console.log(table)
+          let result = filtered.length
 
-          let result = res.messages.length
-
-          if (result === 0) {
-            console.log(chalk.green(`\n${log.succes}  ${result} Errors`))
+          if (result > 0 || !options.hideEmpty) {
+            title('\nPostHTML W3C Validation')
           }
-          console.log(chalk.red(`\n${log.warning}  ${result} Errors`))
+
+          if (result > 0) {
+            console.log(table)
+          }
+
+          if (result === 0 && !options.hideEmpty) {
+            console.log(chalk.green(`\n${log.success}  ${result} Errors`))
+          } else if (result > 0) {
+            console.log(chalk.red(`\n${log.warning}  ${result} Errors`))
+          }
 
           resolve(tree);
         }
