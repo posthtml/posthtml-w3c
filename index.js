@@ -20,7 +20,7 @@ exports = module.exports = function (options) {
   options = options || {}
   options.filter = options.filter || [];
 
-  return async function postHTMLValidate (tree) {
+  return function postHTMLValidate (tree) {
 
     return new Promise(resolve => {
 
