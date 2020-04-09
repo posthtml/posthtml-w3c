@@ -18,36 +18,51 @@ let message = require('./lib/msg')
 
 exports = module.exports = function (options) {
   options = options || {}
+  options.filter = options.filter || [];
 
   return function postHTMLValidate (tree) {
-    w3c.validate({
-      input: render(tree),
-      output: 'json',
-      callback: function (err, res) {
-        res.messages.shift()
-        res.messages.shift()
 
-        title('\nPostHTML W3C Validation')
+    return new Promise(resolve => {
 
-        let table = tab(res.messages.map(msg => {
-          let row = [
-            `\n${type(msg.type) + ' ' + line(msg.lastLine, msg.firstColumn)}`,
-            `\n${message(msg.message)}`
-          ]
+      w3c.validate({
+        input: render(tree),
+        output: 'json',
+        callback: function (err, res) {
+          res.messages.shift()
+          res.messages.shift()
 
-          return row
-        }), {align: 'l', hsep: ''})
+          const filtered = res.messages
+            .filter(msg => !options.filter.some(s => msg.message.includes(s)))
 
-        console.log(table)
+          let table = tab(filtered.map(msg => {
+            let row = [
+              `\n${type(msg.type) + ' ' + line(msg.lastLine, msg.firstColumn)}`,
+              `\n${message(msg.message)}`
+            ]
 
-        let result = res.messages.length
+            return row
+          }), {align: 'l', hsep: ''})
 
-        if (result === 0) {
-          console.log(chalk.green(`\n${log.succes}  ${result} Errors`))
+          let result = filtered.length
+
+          if (result > 0 || !options.hideEmpty) {
+            title('\nPostHTML W3C Validation')
+          }
+
+          if (result > 0) {
+            console.log(table)
+          }
+
+          if (result === 0 && !options.hideEmpty) {
+            console.log(chalk.green(`\n${log.success}  ${result} Errors`))
+          } else if (result > 0) {
+            console.log(chalk.red(`\n${log.warning}  ${result} Errors`))
+          }
+
+          resolve(tree);
         }
-        console.log(chalk.red(`\n${log.warning}  ${result} Errors`))
-      }
+      })
+
     })
-    return tree
   }
 }
