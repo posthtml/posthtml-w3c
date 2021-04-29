@@ -28,6 +28,9 @@ exports = module.exports = function (options) {
         input: render(tree),
         output: 'json',
         callback: function (err, res) {
+          if (!res.messages || res.messages.length === 0) {
+            return resolve(tree);
+          }
           const filtered = res.messages
             .filter(msg => !options.filter.some(s => msg.message.includes(s)))
 
