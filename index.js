@@ -28,9 +28,6 @@ exports = module.exports = function (options) {
         input: render(tree),
         output: 'json',
         callback: function (err, res) {
-          res.messages.shift()
-          res.messages.shift()
-
           const filtered = res.messages
             .filter(msg => !options.filter.some(s => msg.message.includes(s)))
 
